@@ -5,6 +5,8 @@ import (
 	"strings"
 )
 
+// Secret contains the name of the secret, the secret id, the filename and the database name
+// the secret is used to lookup credentials in secretsmanager
 type Secret struct {
 	Name     string `json:"name"`
 	SecretId string `json:"secretId"`
@@ -12,6 +14,7 @@ type Secret struct {
 	Database string `json:"database"`
 }
 
+// Config contains the global config data
 type Config struct {
 	Debug bool `json:"debug"`
 }
@@ -29,6 +32,8 @@ func updateSecret(secret Secret, key, value string) Secret {
 	}
 	return secret
 }
+
+// GetConfig takes a map of environment variables and returns a Config and a map of Secrets
 func GetConfig(varMap map[string]string) (config Config, secrets map[string]Secret, err error) {
 	secrets = make(map[string]Secret)
 	config.Debug = false
