@@ -3,7 +3,8 @@
 Get AWS secrets from AWS Secrets Manager
 
 ## Usage
-The environment variables below would permit getsecrets to download the secrets content for MYDB1 to mydb1.json and MYDB2 to mydb2.json. It would also provide some additional information to the application if needed
+The environment variables below would permit getsecrets to download the secrets content for ONESIGNRO to onesignro.json and BIOMETRICRO to biometricro.json. It would also provide some additional information to the application if needed. In this example, the application might use the secret to  connect to the instance, then connect to the DATABASE.
+```bash
 
 example execution with debug logging
 ```bash
