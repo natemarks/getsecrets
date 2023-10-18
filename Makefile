@@ -24,11 +24,10 @@ ${EXECUTABLES}:
 	  for a in $(GOARCH); do \
         echo "$(COMMIT)/$${o}/$${a}" ; \
         mkdir -p build/$(COMMIT)/$${o}/$${a} ; \
-        echo "VERSION: $(VERSION)" > build/$(COMMIT)/$${o}/$${a}/version.txt ; \
         echo "COMMIT: $(COMMIT)" >> build/$(COMMIT)/$${o}/$${a}/version.txt ; \
         env GOOS=$${o} GOARCH=$${a} \
         go build  -v -o build/$(COMMIT)/$${o}/$${a}/$@ \
-				-ldflags="-X github.com/natemarks/getsecrets/version.Version=${VERSION}" ${PKG}/cmd/$@; \
+				-ldflags="-X github.com/natemarks/getsecrets/version.Version=${COMMIT}" ${PKG}/cmd/$@; \
 	  done \
     done ; \
 
