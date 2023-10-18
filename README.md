@@ -1,6 +1,6 @@
 # getsecrets
 
-Access secrets a JSON string from AWS secretsmanager and store them in a file.
+Get AWS secrets from AWS Secrets Manager
 
 ## Usage
 The environment variables below would permit getsecrets to download the secrets content for MYDB1 to mydb1.json and MYDB2 to mydb2.json. It would also provide some additional information to the application if needed
