@@ -34,7 +34,7 @@ func updateSecret(secret Secret, key, value string) Secret {
 }
 
 // GetConfig takes a map of environment variables and returns a Config and a map of Secrets
-func GetConfig(varMap map[string]string) (config Config, secrets map[string]Secret, err error) {
+func GetConfig(varMap map[string]string) (config Config, secrets map[string]Secret) {
 	secrets = make(map[string]Secret)
 	config.Debug = false
 	for key, value := range varMap {
@@ -57,5 +57,5 @@ func GetConfig(varMap map[string]string) (config Config, secrets map[string]Secr
 		}
 		secrets[name] = updateSecret(val, parts[1], value)
 	}
-	return config, secrets, nil
+	return config, secrets
 }

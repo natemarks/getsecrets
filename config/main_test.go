@@ -14,7 +14,6 @@ func TestGetConfig(t *testing.T) {
 		args        args
 		wantConfig  Config
 		wantSecrets map[string]Secret
-		wantErr     bool
 	}{
 		{
 			name: "sdf",
@@ -46,16 +45,11 @@ func TestGetConfig(t *testing.T) {
 					Database: "mydb2",
 				},
 			},
-			wantErr: false,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			gotConfig, gotSecrets, err := GetConfig(tt.args.varMap)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("GetConfig() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
+			gotConfig, gotSecrets := GetConfig(tt.args.varMap)
 			if !reflect.DeepEqual(gotConfig, tt.wantConfig) {
 				t.Errorf("GetConfig() gotConfig = %v, want %v", gotConfig, tt.wantConfig)
 			}
