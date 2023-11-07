@@ -15,7 +15,8 @@ import (
 func main() {
 	zerolog.SetGlobalLevel(zerolog.InfoLevel)
 	logger := zerolog.New(os.Stderr).With().Str("version", version.Version).Timestamp().Logger()
-	logger.Info().Msg("starting")
+	workingDirectory, _ := os.Getwd()
+	logger.Info().Msg("starting in " + workingDirectory)
 	// get all the environment variables that start with GETSECRETS_
 	envvars := environment.GetSecretsEnvVars()
 	for _, v := range envvars {
@@ -45,12 +46,13 @@ func main() {
 			continue
 		}
 		logger.Debug().Msgf("successfully got secret %s", value.SecretId)
-		logger.Debug().Msgf("trying to write secret %s to %s", value.SecretId, value.Filename)
+		absolutePath := workingDirectory + "/" + value.Filename
+		logger.Debug().Msgf("trying to write secret %s to %s", value.SecretId, absolutePath)
 		err = file.WriteFile(value.Filename, secretValue)
 		if err != nil {
-			logger.Error().Msgf("failed to write secret %s to %s", value.SecretId, value.Filename)
+			logger.Error().Msgf("failed to write secret %s to %s", value.SecretId, absolutePath)
 			continue
 		}
-		logger.Debug().Msgf("successfully wrote secret %s to %s", value.SecretId, value.Filename)
+		logger.Debug().Msgf("successfully wrote secret %s to %s", value.SecretId, absolutePath)
 	}
 }
