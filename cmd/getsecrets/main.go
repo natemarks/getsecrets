@@ -12,15 +12,6 @@ import (
 	"github.com/rs/zerolog"
 )
 
-func WriteSecretToFile(secret config.Secret) (err error) {
-	secretValue, err := secretsmanager.GetSecretValue(secret.SecretId)
-	if err != nil {
-		return err
-	}
-	err = file.WriteFile(secret.Filename, secretValue)
-	return err
-}
-
 func main() {
 	zerolog.SetGlobalLevel(zerolog.InfoLevel)
 	logger := zerolog.New(os.Stderr).With().Str("version", version.Version).Timestamp().Logger()
@@ -47,20 +38,19 @@ func main() {
 			value.Filename)
 	}
 	for _, value := range secrets {
-		err := WriteSecretToFile(value)
+		logger.Debug().Msgf("trying to get secret %s", value.SecretId)
+		secretValue, err := secretsmanager.GetSecretValue(value.SecretId)
 		if err != nil {
-			logger.Error().Err(err).Msgf(
-				"error getting %s - %s to %s : %v",
-				value.Name,
-				value.SecretId,
-				value.Filename,
-				err)
+			logger.Error().Msgf("failed to get secret %s", value.SecretId)
 			continue
 		}
-		logger.Info().Msgf(
-			"wrote %s - %s to %s",
-			value.Name,
-			value.SecretId,
-			value.Filename)
+		logger.Debug().Msgf("successfully got secret %s", value.SecretId)
+		logger.Debug().Msgf("trying to write secret %s to %s", value.SecretId, value.Filename)
+		err = file.WriteFile(value.Filename, secretValue)
+		if err != nil {
+			logger.Error().Msgf("failed to write secret %s to %s", value.SecretId, value.Filename)
+			continue
+		}
+		logger.Debug().Msgf("successfully wrote secret %s to %s", value.SecretId, value.Filename)
 	}
 }
