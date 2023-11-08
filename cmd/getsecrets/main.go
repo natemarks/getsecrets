@@ -51,6 +51,7 @@ func main() {
 		err = file.WriteFile(value.Filename, secretValue)
 		if err != nil {
 			logger.Error().Msgf("failed to write secret %s to %s", value.SecretId, absolutePath)
+			logger.Error().Err(err)
 			continue
 		}
 		logger.Debug().Msgf("successfully wrote secret %s to %s", value.SecretId, absolutePath)
