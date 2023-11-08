@@ -25,9 +25,9 @@ func main() {
 	// organize then env vars into a map pf related keys
 	envvarsMap := environment.GetSecretsEnvVarsMap(envvars)
 	// get the config and secrets from the env vars
-	config, secrets := config.GetConfig(envvarsMap)
+	cfg, secrets := config.GetConfig(envvarsMap)
 	// if debug is set, set the global log level to debug
-	if config.Debug {
+	if cfg.Debug {
 		zerolog.SetGlobalLevel(zerolog.DebugLevel)
 	}
 	// debug logging of the input
@@ -46,14 +46,12 @@ func main() {
 			continue
 		}
 		logger.Debug().Msgf("successfully got secret %s", value.SecretId)
-		absolutePath := workingDirectory + "/" + value.Filename
-		logger.Debug().Msgf("trying to write secret %s to %s", value.SecretId, absolutePath)
+		logger.Debug().Msgf("trying to write secret %s to %s", value.SecretId, value.Filename)
 		err = file.WriteFile(value.Filename, secretValue)
 		if err != nil {
-			logger.Error().Msgf("failed to write secret %s to %s", value.SecretId, absolutePath)
-			logger.Error().Err(err)
+			logger.Error().Err(err).Msgf("failed to write secret %s to %s", value.SecretId, value.Filename)
 			continue
 		}
-		logger.Debug().Msgf("successfully wrote secret %s to %s", value.SecretId, absolutePath)
+		logger.Debug().Msgf("successfully wrote secret %s to %s", value.SecretId, value.Filename)
 	}
 }
